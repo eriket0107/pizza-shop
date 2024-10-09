@@ -1,5 +1,6 @@
 import { LoaderIcon } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -27,6 +28,14 @@ export function SignIn() {
       <Helmet title="Sign In" />
 
       <div className="p-8">
+        <Button
+          asChild
+          className="absolute right-8 top-8 text-foreground hover:underline"
+          variant="link"
+        >
+          <Link to="/sign-up">Novo estabelecimento</Link>
+        </Button>
+
         <div className="flex w-[350px] flex-col justify-center gap-6">
           <div className="flex flex-col gap-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">
