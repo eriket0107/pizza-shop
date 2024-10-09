@@ -1,20 +1,13 @@
-import { Pizza } from 'lucide-react'
 import { Outlet } from 'react-router-dom'
+
+import { Header } from '@/components/header'
 
 export function AppLayout() {
   return (
-    <main className="grid min-h-screen grid-cols-2">
-      <div className="flex h-full flex-col justify-between border-foreground/5 bg-muted p-10 text-muted-foreground">
-        <div className="flex items-center gap-3 text-lg font-medium text-foreground">
-          <Pizza className="h-5 w-5" />
-          <span className="font-semibold">pizza.shop</span>
-        </div>
-        <footer className="text-sm">
-          Painel do parceiro &copy; pizza.shop - {new Date().getFullYear()}
-        </footer>
-      </div>
+    <main className="flex min-h-screen flex-col antialiased">
+      <Header />
 
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-1 flex-col gap-4 p-8 pt-6">
         <Outlet />
       </div>
     </main>
