@@ -1,33 +1,39 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
+
+import { signIn } from '@/api/sign-in'
 
 import { SignInForm, signInFormSchema } from './signInSchema'
 
 export const useSignIn = () => {
+  const [searchParams] = useSearchParams()
+  const email = searchParams.get('email')
+
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<SignInForm>({
     resolver: zodResolver(signInFormSchema),
+    defaultValues: { email: email || '' },
+  })
+
+  const { mutateAsync: authenticate } = useMutation({
+    mutationFn: signIn,
   })
 
   const handleSignIn = async (data: SignInForm) => {
-    console.log(data)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000)).then(() =>
-        toast.success('Enviamos um link de autenticação para o seu email.', {
-          action: {
-            label: 'Reenviar',
-            onClick: () => handleSignIn(data),
+      await authenticate(
+        { email: data.email },
+        {
+          onSuccess: () => {
+            toast.success('Enviamos um link de autenticação para o seu email.')
           },
-          actionButtonStyle: {
-            border: '1px solid green',
-            background: 'transparent',
-            color: 'green',
-          },
-        }),
+        },
       )
     } catch (error) {
       toast.error('Email inválido.')
