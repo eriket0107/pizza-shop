@@ -4,6 +4,8 @@ import { z } from 'zod'
 
 import { getOrders } from '@/api/get-orders'
 
+import { OrderFilter } from './order-table-filters/orderFilterSchema'
+
 export const useOrders = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -12,11 +14,23 @@ export const useOrders = () => {
     .transform((page) => page - 1)
     .parse(searchParams.get('page') ?? '1')
 
-  const { data: result } = useQuery({
-    queryKey: ['order', pageIndex],
-    queryFn: () => getOrders({ pageIndex }),
-  })
+  const { customerName, orderId, status }: OrderFilter = {
+    customerName: searchParams.get('customerName') ?? '',
+    status: searchParams.get('status') ?? 'all',
+    orderId: searchParams.get('orderId') ?? '',
+  }
 
+  const { data: result } = useQuery({
+    queryKey: ['order', pageIndex, customerName, orderId, status],
+    queryFn: () =>
+      getOrders({
+        pageIndex,
+        customerName,
+        orderId,
+        status: status === 'all' ? null : status,
+      }),
+  })
+  console.log(result)
   const handlePaginate = (pageIndex: number) => {
     setSearchParams((prevState) => {
       prevState.set('page', (pageIndex + 1).toString())
