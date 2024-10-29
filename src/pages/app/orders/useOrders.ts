@@ -21,7 +21,7 @@ export const useOrders = () => {
   }
 
   const { data: result } = useQuery({
-    queryKey: ['order', pageIndex, customerName, orderId, status],
+    queryKey: ['orders', pageIndex, customerName, orderId, status],
     queryFn: () =>
       getOrders({
         pageIndex,
@@ -30,7 +30,7 @@ export const useOrders = () => {
         status: status === 'all' ? null : status,
       }),
   })
-  console.log(result)
+
   const handlePaginate = (pageIndex: number) => {
     setSearchParams((prevState) => {
       prevState.set('page', (pageIndex + 1).toString())
