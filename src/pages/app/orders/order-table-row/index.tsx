@@ -1,11 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { ArrowRight, Search, X } from 'lucide-react'
 import { useState } from 'react'
 
-import { cancelOrder } from '@/api/cancel-order'
-import { GetOrdersResponse } from '@/api/get-orders'
 import { OrderStatus } from '@/components/order-status'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -13,6 +10,7 @@ import { TableCell, TableRow } from '@/components/ui/table'
 import { formatCurrency } from '@/utils/formatCurrency'
 
 import { OrderDetails } from '../order-details'
+import { useOrderTableRow } from './useOrderTableRow'
 
 type OrderTableRowProps = {
   order: {
@@ -25,33 +23,17 @@ type OrderTableRowProps = {
 }
 
 export function OrderTableRow({ order }: OrderTableRowProps) {
+  const {
+    cancelOrderFn,
+    isCancelling,
+    approveOrderFn,
+    isApproving,
+    dispatchOrderFn,
+    isDispatching,
+    deliverOrderFn,
+    isDelivering,
+  } = useOrderTableRow()
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
-  const queryClient = useQueryClient()
-
-  const updateCacheOnCancel = async (orderId: string) => {
-    const ordersListCache = queryClient.getQueriesData<GetOrdersResponse>({
-      queryKey: ['orders'],
-    })
-
-    ordersListCache.forEach(([cacheKey, cacheData]) => {
-      if (!cacheData) return
-
-      queryClient.setQueryData<GetOrdersResponse>(cacheKey, {
-        ...cacheData,
-        orders: cacheData.orders.map((order) => {
-          if (order.orderId === orderId) return { ...order, status: 'canceled' }
-
-          return order
-        }),
-      })
-    })
-  }
-
-  const { mutateAsync: cancelOrderFn, isPending: isCancelling } = useMutation({
-    mutationFn: cancelOrder,
-    mutationKey: ['cancel-order'],
-    onSuccess: (_, { orderId }) => updateCacheOnCancel(orderId),
-  })
 
   return (
     <TableRow>
@@ -83,24 +65,52 @@ export function OrderTableRow({ order }: OrderTableRowProps) {
         {formatCurrency(order.total)}
       </TableCell>
       <TableCell>
-        <Button variant={'outline'}>
-          <ArrowRight className="mr-2 h-3 w-3" />
-          Aprovar
-        </Button>
+        {order.status === 'pending' && (
+          <Button
+            variant={'outline'}
+            onClick={() => approveOrderFn({ orderId: order.orderId })}
+            disabled={isApproving}
+          >
+            <ArrowRight className="mr-2 h-3 w-3" />
+            Aprovar
+          </Button>
+        )}
+
+        {order.status === 'processing' && (
+          <Button
+            variant={'outline'}
+            onClick={() => dispatchOrderFn({ orderId: order.orderId })}
+            disabled={isDispatching}
+          >
+            <ArrowRight className="mr-2 h-3 w-3" />
+            Em entrega
+          </Button>
+        )}
+
+        {order.status === 'delivering' && (
+          <Button
+            variant={'outline'}
+            onClick={() => deliverOrderFn({ orderId: order.orderId })}
+            disabled={isDelivering}
+          >
+            <ArrowRight className="mr-2 h-3 w-3" />
+            Entregue
+          </Button>
+        )}
       </TableCell>
       <TableCell>
-        {isCancelling ? (
-          'Cancelando...'
-        ) : (
+        {
           <Button
             variant={'ghost'}
-            disabled={!['pending', 'processing'].includes(order.status)}
+            disabled={
+              !['pending', 'processing'].includes(order.status) || isCancelling
+            }
             onClick={() => cancelOrderFn({ orderId: order.orderId })}
           >
             <X className="mr-2 h-3 w-3" />
-            Cancelar
+            {isCancelling ? 'Cancelando...' : 'Cancelar'}
           </Button>
-        )}
+        }
       </TableCell>
     </TableRow>
   )
