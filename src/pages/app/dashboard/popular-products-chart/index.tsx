@@ -7,13 +7,7 @@ import { getPopularProducts } from '@/api/get-popular-products'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 
-const data = [
-  { product: 'Pepperoni', amount: 78 },
-  { product: 'Mussarela', amount: 81 },
-  { product: 'Marguerita', amount: 32 },
-  { product: '4 Queijos', amount: 42 },
-  { product: 'Frango Catupiry', amount: 24 },
-]
+
 
 const COLORS = [
   colors.sky[500],
@@ -21,7 +15,7 @@ const COLORS = [
   colors.violet[500],
   colors.rose[500],
   colors.emerald[500],
-]
+] as const
 
 export function PopularProductsChart() {
   const { data: popularProducts } = useQuery({
@@ -42,7 +36,7 @@ export function PopularProductsChart() {
       <CardContent>
         {popularProducts && (
           <ResponsiveContainer width="100%" height={240}>
-            <PieChart data={data} style={{ fontSize: 12 }}>
+            <PieChart data={popularProducts} style={{ fontSize: 12 }}>
               <Pie
                 dataKey="amount"
                 data={popularProducts}

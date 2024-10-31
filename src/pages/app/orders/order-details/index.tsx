@@ -86,7 +86,7 @@ export function OrderDetails({ isOpen = false, orderId }: OrderDetailsProps) {
                 <TableCell className="flex justify-end">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-muted-foreground">
-                      {formatDistanceToNow(order.createdAt, {
+                      {formatDistanceToNow(new Date(order.createdAt), {
                         locale: ptBR,
                         addSuffix: true,
                       })}
