@@ -1,10 +1,18 @@
+import { useQuery } from '@tanstack/react-query'
 import { Utensils } from 'lucide-react'
 
+import { getDayOrdersAmount } from '@/api/get-day-orders-amount'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-// export interface IndexProps { }
+export function DayOrdersAmountCard() {
+  const { data: dayOrdersAmount, isLoading: isDayOrdersAmountLoading } =
+    useQuery({
+      queryKey: ['metrics', 'day-orders-amount'],
+      queryFn: getDayOrdersAmount,
+    })
+  const isDifferentFromYesterdayPositive =
+    dayOrdersAmount && dayOrdersAmount.diffFromYesterday >= 0
 
-export function DayOrderAmountCard() {
   return (
     <Card>
       <CardHeader className="flex-row items-center justify-between space-y-0">
@@ -12,11 +20,30 @@ export function DayOrderAmountCard() {
         <Utensils className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent className="space-y-1">
-        <span className="text-2xl font-bold tracking-tight">12</span>
-        <p className="text-xs text-muted-foreground">
-          <span className="text-rose-500 dark:text-rose-400">-4%</span> em
-          relação a ontem
-        </p>
+        {!isDayOrdersAmountLoading && dayOrdersAmount && (
+          <>
+            <span className="text-2xl font-bold tracking-tight">
+              {dayOrdersAmount.amount.toLocaleString('pt-BR')}
+            </span>
+            <p className="text-xs text-muted-foreground">
+              {isDifferentFromYesterdayPositive ? (
+                <>
+                  <span className="text-emerald-500 dark:text-emerald-400">
+                    +{dayOrdersAmount.diffFromYesterday}%
+                  </span>{' '}
+                  em relação a ontem
+                </>
+              ) : (
+                <>
+                  <span className="text-rose-500 dark:text-rose-400">
+                    {dayOrdersAmount.diffFromYesterday}%
+                  </span>{' '}
+                  em relação a ontem
+                </>
+              )}
+            </p>
+          </>
+        )}
       </CardContent>
     </Card>
   )
