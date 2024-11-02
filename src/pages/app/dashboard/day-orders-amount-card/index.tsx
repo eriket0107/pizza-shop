@@ -4,12 +4,13 @@ import { Utensils } from 'lucide-react'
 import { getDayOrdersAmount } from '@/api/get-day-orders-amount'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
+import { MetricCardSkeleton } from '../metric-card-skeleton'
+
 export function DayOrdersAmountCard() {
-  const { data: dayOrdersAmount, isLoading: isDayOrdersAmountLoading } =
-    useQuery({
-      queryKey: ['metrics', 'day-orders-amount'],
-      queryFn: getDayOrdersAmount,
-    })
+  const { data: dayOrdersAmount } = useQuery({
+    queryKey: ['metrics', 'day-orders-amount'],
+    queryFn: getDayOrdersAmount,
+  })
   const isDifferentFromYesterdayPositive =
     dayOrdersAmount && dayOrdersAmount.diffFromYesterday >= 0
 
@@ -20,7 +21,7 @@ export function DayOrdersAmountCard() {
         <Utensils className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent className="space-y-1">
-        {!isDayOrdersAmountLoading && dayOrdersAmount && (
+        {dayOrdersAmount ? (
           <>
             <span className="text-2xl font-bold tracking-tight">
               {dayOrdersAmount.amount.toLocaleString('pt-BR')}
@@ -43,6 +44,8 @@ export function DayOrdersAmountCard() {
               )}
             </p>
           </>
+        ) : (
+          <MetricCardSkeleton />
         )}
       </CardContent>
     </Card>

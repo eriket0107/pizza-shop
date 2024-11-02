@@ -24,6 +24,8 @@ import {
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 
+import { ChartLoader } from '../chart-loader'
+
 export function RevenueChart() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: subDays(new Date(), 7),
@@ -63,7 +65,7 @@ export function RevenueChart() {
         </div>
       </CardHeader>
       <CardContent>
-        {chartData && (
+        {chartData ? (
           <ResponsiveContainer width="100%" height={240}>
             <LineChart data={chartData} style={{ fontSize: 12 }}>
               <XAxis dataKey="date" tickLine={false} axisLine={false} dy={18} />
@@ -91,6 +93,8 @@ export function RevenueChart() {
               <Tooltip />
             </LineChart>
           </ResponsiveContainer>
+        ) : (
+          <ChartLoader />
         )}
       </CardContent>
     </Card>

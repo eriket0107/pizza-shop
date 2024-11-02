@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useQuery } from '@tanstack/react-query'
 import { BarChart } from 'lucide-react'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
@@ -5,6 +6,8 @@ import colors from 'tailwindcss/colors'
 
 import { getPopularProducts } from '@/api/get-popular-products'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
+import { ChartLoader } from '../chart-loader'
 
 const COLORS = [
   colors.sky[500],
@@ -31,7 +34,7 @@ export function PopularProductsChart() {
         </div>
       </CardHeader>
       <CardContent>
-        {popularProducts && (
+        {popularProducts ? (
           <ResponsiveContainer width="100%" height={240}>
             <PieChart data={popularProducts} style={{ fontSize: 12 }}>
               <Pie
@@ -67,8 +70,8 @@ export function PopularProductsChart() {
                     >
                       {popularProducts[index].product.length > 12
                         ? popularProducts[index].product
-                            .substring(0, 12)
-                            .concat('...')
+                          .substring(0, 12)
+                          .concat('...')
                         : popularProducts[index].product}{' '}
                       ({value})
                     </text>
@@ -86,6 +89,8 @@ export function PopularProductsChart() {
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
+        ) : (
+          <ChartLoader />
         )}
       </CardContent>
     </Card>
