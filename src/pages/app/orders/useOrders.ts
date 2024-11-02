@@ -20,7 +20,7 @@ export const useOrders = () => {
     orderId: searchParams.get('orderId') ?? '',
   }
 
-  const { data: result } = useQuery({
+  const { data: result, isLoading: isLoadingOrders } = useQuery({
     queryKey: ['orders', pageIndex, customerName, orderId, status],
     queryFn: () =>
       getOrders({
@@ -42,5 +42,6 @@ export const useOrders = () => {
     result,
     pageIndex,
     handlePaginate,
+    isLoadingOrders,
   }
 }
