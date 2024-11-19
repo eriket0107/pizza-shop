@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/table'
 import { formatCurrency } from '@/utils/formatCurrency'
 
+import { OrderDetailsSkeleton } from './skeleton'
 import { useOrderDetails } from './useOrderDetails'
 
 export interface OrderDetailsProps {
@@ -29,15 +30,13 @@ export interface OrderDetailsProps {
 export function OrderDetails({ isOpen = false, orderId }: OrderDetailsProps) {
   const { order } = useOrderDetails({ orderId, isOpen })
 
-  if (!order) return null
-
   return (
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Pedido: {orderId}</DialogTitle>
         <DialogDescription>Detalhes do pedido</DialogDescription>
       </DialogHeader>
-      {order && (
+      {order ? (
         <div className="space-y-6">
           <Table>
             <TableBody>
@@ -130,6 +129,8 @@ export function OrderDetails({ isOpen = false, orderId }: OrderDetailsProps) {
             </TableFooter>
           </Table>
         </div>
+      ) : (
+        <OrderDetailsSkeleton />
       )}
     </DialogContent>
   )
