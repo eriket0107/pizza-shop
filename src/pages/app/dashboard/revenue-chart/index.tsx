@@ -48,7 +48,6 @@ export function RevenueChart() {
       })),
     [dailyRevenueInPeriod],
   )
-
   return (
     <Card className="col-span-6">
       <CardHeader className="flex-row items-center justify-between pb-8">

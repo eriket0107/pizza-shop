@@ -23,6 +23,7 @@ export function PopularProductsChart() {
     queryFn: getPopularProducts,
   })
 
+
   return (
     <Card className="col-span-3">
       <CardHeader className="pb-8">
@@ -78,7 +79,7 @@ export function PopularProductsChart() {
                   )
                 }}
               >
-                {popularProducts.map((_, index) => (
+                {popularProducts?.map((_, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index]}

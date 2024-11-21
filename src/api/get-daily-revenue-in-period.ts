@@ -1,7 +1,7 @@
 import { api } from '@/lib/axios'
 
 export type GetDailyRevenueInPeriod = {
-  date: number
+  date: string
   receipt: number
 }[]
 
