@@ -16,7 +16,7 @@ import { useOrders } from './useOrders'
 
 export function Orders() {
   const { result, pageIndex, handlePaginate, isLoadingOrders } = useOrders()
-
+  console.log(result)
   return (
     <>
       <Helmet title="Pedidos" />
@@ -42,7 +42,7 @@ export function Orders() {
               <TableBody>
                 {isLoadingOrders && <OrderTableSkeleton />}
                 {result &&
-                  result.orders.map((order) => (
+                  result.orders?.map((order) => (
                     <OrderTableRow key={order.orderId} order={order} />
                   ))}
               </TableBody>
@@ -52,8 +52,8 @@ export function Orders() {
             <Pagination
               onPageChange={handlePaginate}
               pageIndex={pageIndex}
-              totalCount={result.meta.totalCount}
-              perPage={result.meta.perPage}
+              totalCount={result.meta?.totalCount}
+              perPage={result.meta?.perPage}
             />
           )}
         </div>

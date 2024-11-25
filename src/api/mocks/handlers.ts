@@ -6,6 +6,8 @@ import { getManagedRestaurantMock } from './get-managed.mock'
 import { getMonthCanceledOrdersAmountMock } from './get-month-canceled-amount.mock'
 import { getMonthOrdersAmountMock } from './get-month-order-amount.mock'
 import { getMonthRevenueMock } from './get-month-revenue.mock'
+import { getOrderDetailsMock } from './get-order-details.mock'
+import { getOrdersMock } from './get-orders.mock'
 import { getPopularProductsMock } from './get-popular-products.mock'
 import { getProfileMock } from './get-profile.mock'
 import { registerRestaurantMock } from './register-restaurant.mock'
@@ -24,4 +26,6 @@ export default [
   getPopularProductsMock,
   getProfileMock,
   updateProfileMock,
+  getOrdersMock,
+  getOrderDetailsMock,
 ] as HttpHandler[]
