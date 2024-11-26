@@ -13,7 +13,7 @@ test('sign in sucessfully', async ({ page }) => {
   expect(toast).toBeVisible()
 })
 
-test('sign with wrong credentials', async ({ page }) => {
+test('sign in with wrong credentials', async ({ page }) => {
   await page.goto('/sign-in', { waitUntil: 'networkidle' })
 
   await page.getByLabel('Seu e-mail').fill('wrong@gmail.com')
